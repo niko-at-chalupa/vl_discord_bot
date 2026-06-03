@@ -1,14 +1,30 @@
 pub mod types;
 pub mod commands;
 pub mod ui;
+pub mod config;
 
 use poise::serenity_prelude as serenity;
+use clap::Parser;
 
 use crate::types::Data;
+use crate::config::{Args, Config};
 
 #[tokio::main]
 async fn main() {
     let _ = dotenvy::dotenv();
+
+    let args = Args::parse();
+
+    if args.config_gen {
+        if let Err(e) = Config::generate_default() {
+            eprintln!("Error generating config: {}", e);
+            std::process::exit(1);
+        }
+        return;
+    }
+
+    let config = Config::load(args.config).expect("Failed to load config");
+
     let token = std::env::var("TOKEN").expect("missing TOKEN");
     let intents = serenity::GatewayIntents::non_privileged();
 
@@ -23,7 +39,7 @@ async fn main() {
             Box::pin(async move {
                 println!("Logging in as {}", &ctx.cache.current_user().name);
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
-                Ok(std::sync::Arc::new(Data {}))
+                Ok(std::sync::Arc::new(Data { config }))
             })
         })
         .build();

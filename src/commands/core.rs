@@ -1,8 +1,5 @@
-use std::sync::Arc;
-
 use crate::commands::Commands;
 use crate::types::Context;
-use crate::types::Data;
 use crate::types::Error;
 
 pub async fn commands() -> Commands {
@@ -22,10 +19,11 @@ pub async fn ping(ctx: Context<'_>) -> Result<(), Error> {
     ctx.defer_ephemeral().await?;
     
     let duration = start.elapsed();
+    let response = ctx.data().config.messages.ping.response_message.replace("[latency]", &format!("`{:?}ms`", duration.as_millis()));
     
     ctx.send(poise::CreateReply::default()
         .ephemeral(true)
-        .content(format!("Pong! Latency: `{:?}ms`", duration.as_millis())),
+        .content(response),
     ).await?;
     
     Ok(())
