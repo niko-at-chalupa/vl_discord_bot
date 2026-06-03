@@ -77,7 +77,7 @@ impl Config {
             print!("{}", ui::COLOR_RESET);
         }
 
-        println!("{} Loading config from {}", ui::CHECK, target_path.display());
+        println!("Loading config from {}", target_path.display());
 
         let mut config: Config = serde_yaml::from_value(existing_val)?;
 
@@ -96,7 +96,7 @@ impl Config {
             return Err(format!("{} already exists. Please remove or rename it before generating a new one.", path.display()).into());
         }
         fs::write(path, DEFAULT_CONFIG)?;
-        println!("{} Generated default {}", ui::CHECK, path.display());
+        println!("{}{} Generated default {}", ui::COLOR_SUCCESS, ui::CHECK, path.display());
         Ok(())
     }
 }

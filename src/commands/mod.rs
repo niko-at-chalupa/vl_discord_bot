@@ -20,7 +20,7 @@ pub struct Commands {
 }
 
 pub async fn all_commands() -> Vec<poise::Command<Arc<Data>, Error>> {
-    println!("Registering commands...\n");
+    println!("\nRegistering commands...\n");
 
     let mut command_modules: HashMap<&'static str, Commands> = HashMap::new();
     let mut final_commands: Vec<poise::Command<Arc<Data>, Error>> = vec![];
@@ -44,6 +44,6 @@ pub async fn all_commands() -> Vec<poise::Command<Arc<Data>, Error>> {
             }
         }
     }
-    print!("{}", ui::COLOR_RESET);
+    println!("{}", ui::COLOR_RESET);
     final_commands
 }
