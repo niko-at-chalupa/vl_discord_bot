@@ -4,6 +4,7 @@ use std::path::PathBuf;
 use clap::Parser;
 
 pub const DEFAULT_CONFIG: &str = r#"messages:
+  error: "ERROR !!!!!!!!!!!!! 😭😭😭 Check debug logs!! 🥺🥺🥺";
   ping:
     response_message: "Pong! Latency: [latency]"
 "#;
@@ -28,6 +29,7 @@ pub struct Config {
 // messages
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct MessagesConfig {
+    pub error: String,
     pub ping: PingConfig,
 }
 
