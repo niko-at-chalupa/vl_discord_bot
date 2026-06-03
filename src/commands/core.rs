@@ -25,7 +25,7 @@ pub async fn ping(ctx: Context<'_>) -> Result<(), Error> {
     
     ctx.send(poise::CreateReply::default()
         .ephemeral(true)
-        .content(format!("Pong! Latency: `{:?}`", duration)),
+        .content(format!("Pong! Latency: `{:?}ms`", duration.as_millis())),
     ).await?;
     
     Ok(())
