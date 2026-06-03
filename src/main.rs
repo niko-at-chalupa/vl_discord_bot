@@ -8,6 +8,7 @@ use crate::types::Data;
 
 #[tokio::main]
 async fn main() {
+    let _ = dotenvy::dotenv();
     let token = std::env::var("TOKEN").expect("missing TOKEN");
     let intents = serenity::GatewayIntents::non_privileged();
 
