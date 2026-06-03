@@ -79,10 +79,7 @@ impl Config {
 
         println!("Loading config from {}", target_path.display());
 
-        let mut config: Config = serde_yaml::from_value(existing_val)?;
-
-        // Ensure quotes/whitespace are trimmed if they somehow persisted or were literal
-        config.messages.ping.response_message = config.messages.ping.response_message.trim_matches('"').to_string();
+        let config: Config = serde_yaml::from_value(existing_val)?;
 
         Ok(config)
     }
