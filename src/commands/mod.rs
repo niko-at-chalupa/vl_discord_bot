@@ -21,7 +21,7 @@ pub struct Commands {
 }
 
 pub async fn all_commands() -> Vec<poise::Command<Arc<Data>, Error>> {
-    println!("\nRegistering commands...\n");
+    print!("\nRegistering commands...");
 
     let mut command_modules: HashMap<&'static str, Commands> = HashMap::new();
     let mut final_commands: Vec<poise::Command<Arc<Data>, Error>> = vec![];
@@ -30,7 +30,7 @@ pub async fn all_commands() -> Vec<poise::Command<Arc<Data>, Error>> {
     command_modules.insert("tebex", tebex::commands().await);
 
     for module in command_modules {
-        println!("[{}]", module.0);
+        println!("\n[{}]", module.0);
 
         for safe_command in module.1.commands.into_iter() {
             println!("{}{} {} - {}", ui::COLOR_SUCCESS, ui::CHECK, safe_command.name, safe_command.description.as_deref().unwrap_or("[no description]"));
@@ -45,6 +45,8 @@ pub async fn all_commands() -> Vec<poise::Command<Arc<Data>, Error>> {
                 println!("{}{} {} - {}", ui::COLOR_ERROR, ui::CROSS, command.name, command.description.as_deref().unwrap_or("[no description]"));
             }
         }
+
+        print!("{}", ui::COLOR_RESET)
     }
     println!("{}", ui::COLOR_RESET);
     final_commands
