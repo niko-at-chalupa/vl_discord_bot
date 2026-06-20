@@ -25,7 +25,7 @@ async fn main() {
 
     let config = Config::load(args.config).expect("Failed to load config");
 
-    let token = std::env::var("TOKEN").expect("missing TOKEN");
+    let token = std::env::var("TOKEN").expect("The environment variable TOKEN is unset, please set it in `.env` or by exporting it");
     let intents = serenity::GatewayIntents::non_privileged();
 
     let commands = crate::commands::all_commands().await;
