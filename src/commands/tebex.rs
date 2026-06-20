@@ -1,15 +1,17 @@
-use crate::commands::Commands;
-use crate::types::Context;
-use crate::types::Error;
+use crate::commands::{Commands, ConditionalCommand};
+use crate::types::{Context, Data, Error};
+use std::sync::Arc;
 
 pub async fn commands() -> Commands {
     Commands {
-        commands: vec![
-            store(),
-        ],
-        conditional_commands: vec![]
+        commands: vec![],
+        conditional_commands: vec![
+            Box::new(Store),
+        ]
     }
 }
+
+pub struct Store;
 
 /// Show the server's webstore URL & info
 #[poise::command(slash_command)]
@@ -22,4 +24,14 @@ pub async fn store(ctx: Context<'_>) -> Result<(), Error> {
     ).await?;
     
     Ok(())
+}
+
+impl ConditionalCommand for Store {
+    fn should_register(&self) -> bool {
+        true
+    }
+
+    fn command(&self) -> poise::Command<Arc<Data>, Error> {
+        store()
+    }
 }
