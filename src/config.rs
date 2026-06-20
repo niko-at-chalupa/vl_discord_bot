@@ -85,9 +85,11 @@ impl Config {
             print!("{}", ui::COLOR_RESET);
         }
 
-        println!("Loading config from {}", target_path.display());
+        print!("Loading config from {}... ", target_path.display());
 
         let config: Config = serde_yaml::from_value(existing_val)?;
+
+        println!("{}{} okay{}", ui::COLOR_SUCCESS, ui::CHECK, ui::COLOR_RESET);
 
         Ok(config)
     }
