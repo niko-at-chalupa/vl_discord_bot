@@ -5,6 +5,7 @@ use std::collections::HashMap;
 use crate::ui;
 
 pub mod core;
+pub mod tebex;
 
 pub trait ConditionalCommand {
     fn command(&self) -> poise::Command<Arc<Data>, Error>;
@@ -26,6 +27,7 @@ pub async fn all_commands() -> Vec<poise::Command<Arc<Data>, Error>> {
     let mut final_commands: Vec<poise::Command<Arc<Data>, Error>> = vec![];
 
     command_modules.insert("core", core::commands().await);
+    command_modules.insert("tebex", tebex::commands().await);
 
     for module in command_modules {
         println!("[{}]", module.0);

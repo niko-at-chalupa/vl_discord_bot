@@ -8,6 +8,8 @@ use crate::ui;
 pub const DEFAULT_CONFIG: &str = r#"messages:
   ping:
     response_message: "Pong! Latency: [latency]"
+tebex:
+    channel: 0 # Channel to send Tebex alerts to. 0 to ignore.
 "#;
 
 #[derive(Parser, Debug)]
@@ -25,6 +27,7 @@ pub struct Args {
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Config {
     pub messages: MessagesConfig,
+    pub tebex: TebexConfig,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -35,6 +38,11 @@ pub struct MessagesConfig {
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct PingConfig {
     pub response_message: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct TebexConfig {
+    pub channel: u64,
 }
 
 impl Config {
