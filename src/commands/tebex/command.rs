@@ -2,6 +2,8 @@ use crate::commands::ConditionalCommand;
 use crate::types::{Context, Data, Error};
 use std::sync::Arc;
 
+use tebex_headless_rust::handlers::misc::get_public_api_key;
+
 pub struct Store;
 
 /// Show the server's webstore URL & info
@@ -19,7 +21,11 @@ pub async fn store(ctx: Context<'_>) -> Result<(), Error> {
 
 impl ConditionalCommand for Store {
     fn should_register(&self) -> bool {
-        true
+        let public_api_key = get_public_api_key();
+        match public_api_key {
+            Ok(_) => { return true; },
+            Err(_) => { return false; }
+        }
     }
 
     fn command(&self) -> poise::Command<Arc<Data>, Error> {
