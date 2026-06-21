@@ -6,9 +6,12 @@ edition = "2024"
 [dependencies]
 clap = { version = "4.6.1", features = ["derive"] }
 dotenvy = "0.15.7"
+ego-tree = "0.11.0"
 image = "0.25.10"
 poise = "0.6.2"
 qrcode = "0.14.1"
+rand = "0.10.1"
+scraper = "0.27.0"
 serde = "1.0.228"
 serde_yaml = "0.9.34"
 tebex_headless_rust = "0.1.3"

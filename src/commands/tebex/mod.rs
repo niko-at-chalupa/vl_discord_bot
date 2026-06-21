@@ -1,6 +1,7 @@
 use crate::commands::Commands;
 
 pub mod command;
+mod etc;
 use crate::commands::tebex::command::*;
 use tebex_headless_rust::handlers::misc::get_public_api_key;
 use crate::ui::{CROSS, COLOR_ERROR, COLOR_RESET};
