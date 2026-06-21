@@ -2,15 +2,6 @@ use crate::commands::{Commands, ConditionalCommand};
 use crate::types::{Context, Data, Error};
 use std::sync::Arc;
 
-pub async fn commands() -> Commands {
-    Commands {
-        commands: vec![],
-        conditional_commands: vec![
-            Box::new(Store),
-        ]
-    }
-}
-
 pub struct Store;
 
 /// Show the server's webstore URL & info
