@@ -5,12 +5,14 @@ use std::io::{self, Write};
 use clap::Parser;
 use crate::ui;
 
-pub const DEFAULT_CONFIG: &str = r#"messages:
+pub const DEFAULT_CONFIG: &str = r##"messages:
   ping:
     response_message: "Pong! Latency: [latency]"
 tebex:
     channel: 0 # Channel to send Tebex alerts to. 0 to ignore.
-"#;
+    store_embed_color: "#00A2FF"
+    featured_embed_color: "#FF9900"
+"##;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -43,6 +45,8 @@ pub struct PingConfig {
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct TebexConfig {
     pub channel: u64,
+    pub store_embed_color: String,
+    pub featured_embed_color: String,
 }
 
 impl Config {

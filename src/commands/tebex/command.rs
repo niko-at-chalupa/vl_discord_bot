@@ -46,14 +46,22 @@ pub async fn store(ctx: Context<'_>) -> Result<(), Error> {
 
     let attachment = serenity::CreateAttachment::bytes(buf.into_inner(), "qr.png");
 
-    let embed = CreateEmbed::new()
+    let mut embed = CreateEmbed::new()
         .title(name)
         .url(domain)
         .description(format!(r#"Currency: **{currency}**"#))
         .thumbnail("attachment://qr.png");
 
+    if let Some(color) = parse_color(&ctx.data().config.tebex.store_embed_color) {
+        embed = embed.color(color);
+    }
+
     let mut embed_two = CreateEmbed::new()
         .title("Featured Packages");
+
+    if let Some(color) = parse_color(&ctx.data().config.tebex.featured_embed_color) {
+        embed_two = embed_two.color(color);
+    }
 
     for pkg in top_three {
         embed_two = embed_two.field(
@@ -71,6 +79,11 @@ pub async fn store(ctx: Context<'_>) -> Result<(), Error> {
     ).await?;
 
     Ok(())
+}
+
+fn parse_color(hex: &str) -> Option<serenity::Color> {
+    let hex = hex.trim_start_matches('#');
+    u32::from_str_radix(hex, 16).map(serenity::Color::from).ok()
 }
 
 impl ConditionalCommand for Store {
