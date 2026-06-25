@@ -3,6 +3,7 @@ use crate::types::{Context, Data, Error};
 use std::sync::Arc;
 use qrcode::QrCode;
 use image::Luma;
+use rand::SeedableRng;
 use rand::seq::SliceRandom;
 use tebex_headless_rust::handlers::package::get_all_packages;
 use std::io::Cursor;
@@ -10,7 +11,6 @@ use poise::serenity_prelude::CreateEmbed;
 use tebex_headless_rust::handlers::misc::get_public_api_key;
 use tebex_headless_rust::handlers::webstores::get_webstore;
 use poise::serenity_prelude as serenity;
-use rand::rng;
 
 pub struct Store;
 
@@ -30,7 +30,8 @@ pub async fn store(ctx: Context<'_>) -> Result<(), Error> {
     let mut packages = get_all_packages(None, None).await?;
 
     {
-        let mut rng = rng();
+        let seed = [235; 32];
+        let mut rng = rand_chacha::ChaCha8Rng::from_seed(seed);
         packages.shuffle(&mut rng);
     }
 
