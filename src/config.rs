@@ -1,9 +1,9 @@
+use crate::ui;
+use clap::Parser;
 use serde::{Deserialize, Serialize};
 use std::fs;
-use std::path::PathBuf;
 use std::io::{self, Write};
-use clap::Parser;
-use crate::ui;
+use std::path::PathBuf;
 
 pub const DEFAULT_CONFIG: &str = r##"messages:
   ping:
@@ -56,7 +56,11 @@ impl Config {
 
         if !target_path.exists() {
             if path.is_none() {
-                print!("{}{} No config file found. Create one? (Y/n): ", ui::COLOR_WARN, ui::WARN);
+                print!(
+                    "{}{} No config file found. Create one? (Y/n): ",
+                    ui::COLOR_WARN,
+                    ui::WARN
+                );
                 io::stdout().flush()?;
                 let mut input = String::new();
                 io::stdin().read_line(&mut input)?;
@@ -85,7 +89,11 @@ impl Config {
         if updated {
             let updated_str = serde_yaml::to_string(&existing_val)?;
             fs::write(&target_path, updated_str)?;
-            println!("{}{} Your config was updated with new default values!", ui::COLOR_SUCCESS, ui::CHECK);
+            println!(
+                "{}{} Your config was updated with new default values!",
+                ui::COLOR_SUCCESS,
+                ui::CHECK
+            );
             print!("{}", ui::COLOR_RESET);
         }
 
@@ -104,16 +112,27 @@ impl Config {
 
     fn generate_default_at(path: &PathBuf) -> Result<(), Box<dyn std::error::Error>> {
         if path.exists() {
-            return Err(format!("{} already exists. Please remove or rename it before generating a new one.", path.display()).into());
+            return Err(format!(
+                "{} already exists. Please remove or rename it before generating a new one.",
+                path.display()
+            )
+            .into());
         }
         fs::write(path, DEFAULT_CONFIG)?;
-        println!("{}{} Generated default {}", ui::COLOR_SUCCESS, ui::CHECK, path.display());
+        println!(
+            "{}{} Generated default {}",
+            ui::COLOR_SUCCESS,
+            ui::CHECK,
+            path.display()
+        );
         Ok(())
     }
 }
 
 fn merge_values(existing: &mut serde_yaml::Value, default: &serde_yaml::Value, updated: &mut bool) {
-    if let (Some(existing_map), Some(default_map)) = (existing.as_mapping_mut(), default.as_mapping()) {
+    if let (Some(existing_map), Some(default_map)) =
+        (existing.as_mapping_mut(), default.as_mapping())
+    {
         for (key, default_val) in default_map {
             if !existing_map.contains_key(key) {
                 existing_map.insert(key.clone(), default_val.clone());

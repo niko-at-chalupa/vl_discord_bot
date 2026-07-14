@@ -4,10 +4,8 @@ use crate::types::Error;
 
 pub async fn commands() -> Commands {
     Commands {
-        commands: vec![
-            ping()
-        ],
-        conditional_commands: vec![]
+        commands: vec![ping()],
+        conditional_commands: vec![],
     }
 }
 
@@ -15,16 +13,24 @@ pub async fn commands() -> Commands {
 #[poise::command(slash_command)]
 pub async fn ping(ctx: Context<'_>) -> Result<(), Error> {
     let start = std::time::Instant::now();
-    
+
     ctx.defer_ephemeral().await?;
-    
+
     let duration = start.elapsed();
-    let response = ctx.data().config.messages.ping.response_message.replace("[latency]", &format!("`{:?}ms`", duration.as_millis()));
-    
-    ctx.send(poise::CreateReply::default()
-        .ephemeral(true)
-        .content(response),
-    ).await?;
-    
+    let response = ctx
+        .data()
+        .config
+        .messages
+        .ping
+        .response_message
+        .replace("[latency]", &format!("`{:?}ms`", duration.as_millis()));
+
+    ctx.send(
+        poise::CreateReply::default()
+            .ephemeral(true)
+            .content(response),
+    )
+    .await?;
+
     Ok(())
 }

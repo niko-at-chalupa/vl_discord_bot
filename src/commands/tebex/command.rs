@@ -1,22 +1,21 @@
 use crate::commands::ConditionalCommand;
 use crate::types::{Context, Data, Error};
-use std::sync::Arc;
-use qrcode::QrCode;
 use image::Luma;
-use rand::SeedableRng;
-use rand::seq::SliceRandom;
-use tebex_headless_rust::handlers::package::get_all_packages;
-use std::io::Cursor;
-use poise::serenity_prelude::CreateEmbed;
-use tebex_headless_rust::handlers::misc::get_public_api_key;
-use tebex_headless_rust::handlers::webstores::get_webstore;
 use poise::serenity_prelude as serenity;
+use poise::serenity_prelude::CreateEmbed;
+use qrcode::QrCode;
+use rand::seq::SliceRandom;
+use std::io::Cursor;
+use std::sync::Arc;
+use tebex_headless_rust::handlers::misc::get_public_api_key;
+use tebex_headless_rust::handlers::package::get_all_packages;
+use tebex_headless_rust::handlers::webstores::get_webstore;
 
 pub struct Store;
 
 /// Show the server's webstore URL & info
 #[poise::command(slash_command)]
-pub async fn store(ctx: Context<'_>) -> Result<(), Error> {    
+pub async fn store(ctx: Context<'_>) -> Result<(), Error> {
     ctx.defer_ephemeral().await?;
 
     let webstore = get_webstore().await?;
@@ -46,18 +45,13 @@ pub async fn store(ctx: Context<'_>) -> Result<(), Error> {
 
     let attachment = serenity::CreateAttachment::bytes(buf.into_inner(), "qr.png");
 
-    let mut embed = CreateEmbed::new()
-        .title(name)
-        .url(domain)
+    let embed = CreateEmbed::new()
+        .title(&name)
+        .url(&domain)
         .description(format!(r#"Currency: **{currency}**"#))
         .thumbnail("attachment://qr.png");
 
-    if let Some(color) = parse_color(&ctx.data().config.tebex.store_embed_color) {
-        embed = embed.color(color);
-    }
-
-    let mut embed_two = CreateEmbed::new()
-        .title("Featured Packages");
+    let mut embed_two = CreateEmbed::new().title("Featured Packages");
 
     if let Some(color) = parse_color(&ctx.data().config.tebex.featured_embed_color) {
         embed_two = embed_two.color(color);
@@ -65,18 +59,23 @@ pub async fn store(ctx: Context<'_>) -> Result<(), Error> {
 
     for pkg in top_three {
         embed_two = embed_two.field(
-            &pkg.name,
-            format!("{}", crate::commands::tebex::etc::html_to_discord_md(&pkg.description)),
+            format!("{}", &pkg.name),
+            format!(
+                "{}",
+                crate::commands::tebex::etc::html_to_discord_md(&pkg.description)
+            ),
             false,
         );
     }
 
-    ctx.send(poise::CreateReply::default()
-        .ephemeral(true)
-        .embed(embed)
-        .embed(embed_two)
-        .attachment(attachment)
-    ).await?;
+    ctx.send(
+        poise::CreateReply::default()
+            .ephemeral(true)
+            .embed(embed)
+            .embed(embed_two)
+            .attachment(attachment),
+    )
+    .await?;
 
     Ok(())
 }
@@ -90,8 +89,12 @@ impl ConditionalCommand for Store {
     fn should_register(&self) -> bool {
         let public_api_key = get_public_api_key();
         match public_api_key {
-            Ok(_) => { return true; },
-            Err(_) => { return false; }
+            Ok(_) => {
+                return true;
+            }
+            Err(_) => {
+                return false;
+            }
         }
     }
 

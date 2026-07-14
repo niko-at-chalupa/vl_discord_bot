@@ -1,5 +1,5 @@
-use std::sync::Arc;
 use crate::config::Config;
+use std::sync::Arc;
 
 pub struct Data {
     pub config: Config,

@@ -1,15 +1,15 @@
-use crate::types::Error;
 use crate::types::Data;
-use std::sync::Arc;
-use std::collections::HashMap;
+use crate::types::Error;
 use crate::ui;
+use std::collections::HashMap;
+use std::sync::Arc;
 
 pub mod core;
 pub mod tebex;
 
 pub trait ConditionalCommand {
     fn command(&self) -> poise::Command<Arc<Data>, Error>;
-    
+
     fn should_register(&self) -> bool {
         true
     }
@@ -33,16 +33,37 @@ pub async fn all_commands() -> Vec<poise::Command<Arc<Data>, Error>> {
         println!("\n[{}]", module.0);
 
         for safe_command in module.1.commands.into_iter() {
-            println!("{}{} {} - {}", ui::COLOR_SUCCESS, ui::CHECK, safe_command.name, safe_command.description.as_deref().unwrap_or("[no description]"));
+            println!(
+                "{}{} {} - {}",
+                ui::COLOR_SUCCESS,
+                ui::CHECK,
+                safe_command.name,
+                safe_command
+                    .description
+                    .as_deref()
+                    .unwrap_or("[no description]")
+            );
             final_commands.push(safe_command);
         }
         for conditional_command in module.1.conditional_commands.into_iter() {
             let command = conditional_command.command();
             if conditional_command.should_register() {
-                println!("{}{} {} - {}", ui::COLOR_SUCCESS, ui::CHECK, command.name, command.description.as_deref().unwrap_or("[no description]"));
+                println!(
+                    "{}{} {} - {}",
+                    ui::COLOR_SUCCESS,
+                    ui::CHECK,
+                    command.name,
+                    command.description.as_deref().unwrap_or("[no description]")
+                );
                 final_commands.push(command);
             } else {
-                println!("{}{} {} - {}", ui::COLOR_ERROR, ui::CROSS, command.name, command.description.as_deref().unwrap_or("[no description]"));
+                println!(
+                    "{}{} {} - {}",
+                    ui::COLOR_ERROR,
+                    ui::CROSS,
+                    command.name,
+                    command.description.as_deref().unwrap_or("[no description]")
+                );
             }
         }
 

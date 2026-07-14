@@ -1,13 +1,13 @@
-pub mod types;
 pub mod commands;
-pub mod ui;
 pub mod config;
+pub mod types;
+pub mod ui;
 
-use poise::serenity_prelude as serenity;
 use clap::Parser;
+use poise::serenity_prelude as serenity;
 
-use crate::types::Data;
 use crate::config::{Args, Config};
+use crate::types::Data;
 
 #[tokio::main]
 async fn main() {
@@ -25,7 +25,9 @@ async fn main() {
 
     let config = Config::load(args.config).expect("Failed to load config");
 
-    let token = std::env::var("TOKEN").expect("The environment variable TOKEN is unset, please set it in `.env` or by exporting it");
+    let token = std::env::var("TOKEN").expect(
+        "The environment variable TOKEN is unset, please set it in `.env` or by exporting it",
+    );
     let intents = serenity::GatewayIntents::non_privileged();
 
     let commands = crate::commands::all_commands().await;
@@ -51,7 +53,9 @@ async fn main() {
 
     let shard_manager = client.shard_manager.clone();
     tokio::spawn(async move {
-        tokio::signal::ctrl_c().await.expect("Failed to listen for Ctrl+C");
+        tokio::signal::ctrl_c()
+            .await
+            .expect("Failed to listen for Ctrl+C");
         println!("Shutting down...");
         shard_manager.shutdown_all().await;
     });

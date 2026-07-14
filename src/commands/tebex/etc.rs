@@ -1,15 +1,12 @@
-use scraper::{Html, Node};
 use ego_tree::NodeRef;
+use scraper::{Html, Node};
 
 pub fn html_to_discord_md(html: &str) -> String {
     let fragment = Html::parse_fragment(html);
     let mut out = String::new();
     walk(fragment.tree.root(), &mut out, false);
     // Collapse 3+ blank lines down to max 2 (just one blank line between blocks)
-    let collapsed = out
-        .split("\n\n\n")
-        .collect::<Vec<_>>()
-        .join("\n\n");
+    let collapsed = out.split("\n\n\n").collect::<Vec<_>>().join("\n\n");
     collapsed.trim().to_string()
 }
 
